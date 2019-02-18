@@ -83,4 +83,82 @@ describe("***********Unit Tests for Stock Service***********", () => {
             });
         });
     });
+
+    describe("***********Unit Tests for scanTrade passed successfully***********", () => {
+        let dummydata = {
+            "Items": [{
+                "shares": "30",
+                "symbol": "s3",
+                "createdAt": "2018-04-03T13:07:21.010Z",
+                "price": "195.65",
+                "id": "6",
+                "type": "SELL",
+                "userid": "u1"
+            },
+            {
+                "shares": "30",
+                "symbol": "s2",
+                "createdAt": "2018-04-03T13:07:21.010Z",
+                "price": "195.65",
+                "id": "4",
+                "type": "SELL",
+                "userid": "u1"
+            }],
+            "Count": 6,
+            "ScannedCount": 6,
+            "ConsumedCapacity": null
+        }
+        beforeEach(() => {
+            Trade.scan=jasmine.createSpy("EventScan");
+            loadAllSpy = {
+                loadAll: jasmine.createSpy("loadAll")
+            };
+            executionSpy = {
+                exec: jasmine.createSpy("exec"),
+            };
+            Trade.scan.and.callFake(() => loadAllSpy);
+            loadAllSpy.loadAll.and.callFake(()=>executionSpy);
+            executionSpy.exec.and.callFake(callback => callback(null, dummydata));
+        });
+        it('should succeed and return scanTrade', (done) => {
+            service = new StockMarket();
+            service.scanTrade().then((data) => {
+                console.log(data)
+                expect(data).toEqual(dummydata);
+                expect(Trade.scan).toHaveBeenCalled();
+                done();
+            })
+        });
+    });
+
+    describe("***********Unit Tests for scanTrade passed successfully***********", () => {
+        let errmsg = {
+                "status": "Error",
+                "code": 500,
+                "Message": "Error fetch User Details"
+        }
+        beforeEach(() => {
+            Trade.scan=jasmine.createSpy("EventScan");
+            loadAllSpy = {
+                loadAll: jasmine.createSpy("loadAll")
+            };
+            executionSpy = {
+                exec: jasmine.createSpy("exec"),
+            };
+            Trade.scan.and.callFake(() => loadAllSpy);
+            loadAllSpy.loadAll.and.callFake(()=>executionSpy);
+            executionSpy.exec.and.callFake(callback => callback(errmsg, null));
+        });
+        it('should succeed and return scanTrade', (done) => {
+            service = new StockMarket();
+            service.scanTrade().then((data) => {
+
+            }).catch(err=>{
+                console.log(err)
+                expect(err).toEqual(errmsg);
+                expect(Trade.scan).toHaveBeenCalled();
+                done();
+            })
+        });
+    });
 });
