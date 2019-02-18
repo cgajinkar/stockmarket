@@ -193,7 +193,6 @@ class StockMarket {
                     if (error)
                         reject(error)
                     else {
-                        console.log('return data')
                         resolve(data);
                     }
                 });

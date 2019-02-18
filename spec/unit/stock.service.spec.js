@@ -322,4 +322,183 @@ describe("***********Unit Tests for Stock Service***********", () => {
             });
         });
     });
+
+    describe("***********Unit Tests for getTradeByStockType passed successfully***********", () => {
+        let dummydata = {
+                "shares": "30",
+                "symbol": "s2",
+                "createdAt": "2018-04-03T13:07:21.010Z",
+                "price": "195.65",
+                "id": "4",
+                "type": "SELL",
+                "userid": "u1"
+            }
+        beforeEach(() => {
+            Trade.query = jasmine.createSpy("EventQuery");
+            usingIndexSpy = {
+                usingIndex: jasmine.createSpy("usingIndex")
+            }
+            filterSpy = {
+                filter: jasmine.createSpy("filter")
+            }
+            equalsSpy = {
+                equals: jasmine.createSpy("equals")
+            }
+            loadAllSpy = {
+                loadAll: jasmine.createSpy("loadAll")
+            };
+            executionSpy = {
+                exec: jasmine.createSpy("exec"),
+            };
+            Trade.query.and.callFake(() => usingIndexSpy);
+            usingIndexSpy.usingIndex.and.callFake(() => filterSpy);
+            filterSpy.filter.and.callFake(() => equalsSpy);
+            equalsSpy.equals.and.callFake(() => loadAllSpy);
+            loadAllSpy.loadAll.and.callFake(() => executionSpy);
+            executionSpy.exec.and.callFake(callback => callback(null, dummydata));
+        });
+        it('should succeed and return getTradeByStockType', (done) => {
+            service = new StockMarket();
+            service.getTradeByStockType('s3','Buy').then((data) => {
+                expect(data).toEqual(dummydata);
+                expect(Trade.query).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
+
+    describe("***********Unit Tests for getTradeByStockType fail successfully***********", () => {
+        let errMsg = {
+            message:"Error getting trade by Symbol and Type",
+            status:"error",
+            code:500
+            }
+        beforeEach(() => {
+            Trade.query = jasmine.createSpy("EventQuery");
+            usingIndexSpy = {
+                usingIndex: jasmine.createSpy("usingIndex")
+            }
+            filterSpy = {
+                filter: jasmine.createSpy("filter")
+            }
+            equalsSpy = {
+                equals: jasmine.createSpy("equals")
+            }
+            loadAllSpy = {
+                loadAll: jasmine.createSpy("loadAll")
+            };
+            executionSpy = {
+                exec: jasmine.createSpy("exec"),
+            };
+            Trade.query.and.callFake(() => usingIndexSpy);
+            usingIndexSpy.usingIndex.and.callFake(() => filterSpy);
+            filterSpy.filter.and.callFake(() => equalsSpy);
+            equalsSpy.equals.and.callFake(() => loadAllSpy);
+            loadAllSpy.loadAll.and.callFake(() => executionSpy);
+            executionSpy.exec.and.callFake(callback => callback(errMsg, null));
+        });
+        it('should fail and return error getTradeByStockType', (done) => {
+            service = new StockMarket();
+            service.getTradeByStockType('s3','Buy').then((data) => {
+            }).catch(err=>{
+                expect(err).toEqual(errMsg);
+                expect(Trade.query).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
+    describe("***********Unit Tests for getStockPrice passed successfully***********", () => {
+        let dummydata = {
+            "symbol": "s1",
+            "month": "4",
+            "year": "2018",
+            "day": "3",
+            "price": "137",
+            "timestamp": "2018-04-05T13:07:21.010Z"
+        }
+        beforeEach(() => {
+            Stockprice.query = jasmine.createSpy("EventQuery");
+            usingIndexSpy = {
+                usingIndex: jasmine.createSpy("usingIndex")
+            };
+            filterExpressionSpy = {
+                filterExpression: jasmine.createSpy("filterExpression")
+            };
+            expressionAttributeValuesSpy = {
+                expressionAttributeValues: jasmine.createSpy("expressionAttributeValues")
+            };
+            expressionAttributeNamesSpy = {
+                expressionAttributeNames:jasmine.createSpy("expressionAttributeNames")
+            };
+            loadAllSpy = {
+                loadAll: jasmine.createSpy("loadAll")
+            };
+            executionSpy = {
+                exec: jasmine.createSpy("exec"),
+            };
+            Stockprice.query.and.callFake(() => usingIndexSpy);
+            usingIndexSpy.usingIndex.and.callFake(() => filterExpressionSpy);
+            filterExpressionSpy.filterExpression.and.callFake(() => expressionAttributeValuesSpy);
+            expressionAttributeValuesSpy.expressionAttributeValues.and.callFake(() => expressionAttributeNamesSpy);
+            expressionAttributeNamesSpy.expressionAttributeNames.and.callFake(()=>loadAllSpy);
+            loadAllSpy.loadAll.and.callFake(() => executionSpy);
+            executionSpy.exec.and.callFake(callback => callback(null, dummydata));
+        });
+        it('should pass and return result getStockPrice', (done) => {
+            service = new StockMarket();
+            service.getStockPrice('s3','2018-01-02','2019-02-17').then((data) => {
+                expect(data).toEqual(dummydata);
+                expect(Stockprice.query).toHaveBeenCalled();
+                done();
+            }).catch(err=>{
+
+            });
+        });
+    });
+
+    describe("***********Unit Tests for getStockPrice fails successfully***********", () => {
+        let errMsg = {
+            code:500,
+            status:'error',
+            message:'Error fetching Stock price from DB'
+        }
+        beforeEach(() => {
+            Stockprice.query = jasmine.createSpy("EventQuery");
+            usingIndexSpy = {
+                usingIndex: jasmine.createSpy("usingIndex")
+            };
+            filterExpressionSpy = {
+                filterExpression: jasmine.createSpy("filterExpression")
+            };
+            expressionAttributeValuesSpy = {
+                expressionAttributeValues: jasmine.createSpy("expressionAttributeValues")
+            };
+            expressionAttributeNamesSpy = {
+                expressionAttributeNames:jasmine.createSpy("expressionAttributeNames")
+            };
+            loadAllSpy = {
+                loadAll: jasmine.createSpy("loadAll")
+            };
+            executionSpy = {
+                exec: jasmine.createSpy("exec"),
+            };
+            Stockprice.query.and.callFake(() => usingIndexSpy);
+            usingIndexSpy.usingIndex.and.callFake(() => filterExpressionSpy);
+            filterExpressionSpy.filterExpression.and.callFake(() => expressionAttributeValuesSpy);
+            expressionAttributeValuesSpy.expressionAttributeValues.and.callFake(() => expressionAttributeNamesSpy);
+            expressionAttributeNamesSpy.expressionAttributeNames.and.callFake(()=>loadAllSpy);
+            loadAllSpy.loadAll.and.callFake(() => executionSpy);
+            executionSpy.exec.and.callFake(callback => callback(errMsg, null));
+        });
+        it('should fail and return error getStockPrice', (done) => {
+            service = new StockMarket();
+            service.getStockPrice('s3','2018-01-02','2019-02-17').then((data) => {
+
+            }).catch(err=>{
+                expect(err).toEqual(errMsg);
+                expect(Stockprice.query).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
 });
