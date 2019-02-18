@@ -123,7 +123,6 @@ describe("***********Unit Tests for Stock Service***********", () => {
         it('should succeed and return scanTrade', (done) => {
             service = new StockMarket();
             service.scanTrade().then((data) => {
-                console.log(data)
                 expect(data).toEqual(dummydata);
                 expect(Trade.scan).toHaveBeenCalled();
                 done();
@@ -131,7 +130,7 @@ describe("***********Unit Tests for Stock Service***********", () => {
         });
     });
 
-    describe("***********Unit Tests for scanTrade passed successfully***********", () => {
+    describe("***********Unit Tests for scanTrade returned error successfully***********", () => {
         let errmsg = {
                 "status": "Error",
                 "code": 500,
@@ -154,11 +153,173 @@ describe("***********Unit Tests for Stock Service***********", () => {
             service.scanTrade().then((data) => {
 
             }).catch(err=>{
-                console.log(err)
                 expect(err).toEqual(errmsg);
                 expect(Trade.scan).toHaveBeenCalled();
                 done();
             })
+        });
+    });
+
+    describe("***********Unit Tests for getTradeById passed successfully***********", () => {
+        let dummydata = {
+                "shares": "30",
+                "symbol": "s2",
+                "createdAt": "2018-04-03T13:07:21.010Z",
+                "price": "195.65",
+                "id": "4",
+                "type": "SELL",
+                "userid": "u1"
+            }
+        beforeEach(() => {
+            spyOn(Trade, 'get').and.callFake(function(event, callback) {
+                callback(null, dummydata)});
+        });
+        it('should succeed and return getTradeById', (done) => {
+            service = new StockMarket();
+            service.getTradeById(4).then((data) => {
+                expect(data).toEqual(dummydata);
+                expect(Trade.get).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
+
+    describe("***********Unit Tests for getTradeById returned error successfully***********", () => {
+        let errmsg = {
+            "status": "Error",
+            "code": 500,
+            "Message": "Error fetch Trade Details"
+        }
+        beforeEach(() => {
+            spyOn(Trade, 'get').and.callFake(function(event, callback) {
+                callback(errmsg, null)});
+        });
+        it('shoul return error getTradeById', (done) => {
+            service = new StockMarket();
+            service.getTradeById(4).then(data => {
+            }).catch(err=>{
+                expect(err).toEqual(errmsg);
+                expect(Trade.get).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
+
+    describe("***********Unit Tests for getTradeByUser passed successfully***********", () => {
+        let dummydata = {
+                "shares": "30",
+                "symbol": "s2",
+                "createdAt": "2018-04-03T13:07:21.010Z",
+                "price": "195.65",
+                "id": "4",
+                "type": "SELL",
+                "userid": "u1"
+            }
+        beforeEach(() => {
+            Trade.query=jasmine.createSpy("EventQuery");
+
+            usingIndexSpy = {
+                usingIndex:jasmine.createSpy("usingIndex")
+            }
+            loadAllSpy = {
+                loadAll: jasmine.createSpy("loadAll")
+            };
+            executionSpy = {
+                exec: jasmine.createSpy("exec"),
+            };
+            Trade.query.and.callFake(() => usingIndexSpy);
+            usingIndexSpy.usingIndex.and.callFake(() => loadAllSpy);
+            loadAllSpy.loadAll.and.callFake(() => executionSpy);
+            executionSpy.exec.and.callFake(callback => callback(null,dummydata));
+        });
+        it('should succeed and return getTradeByUser', (done) => {
+            service = new StockMarket();
+            service.getTradeByUser('u1').then((data) => {
+                expect(data).toEqual(dummydata);
+                expect(Trade.query).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
+
+    describe("***********Unit Tests for getTradeByUser returned Error successfully***********", () => {
+        let errMsg = {
+            "code":500,
+            "status":"error",
+            "message":"Error fetching Trade details by userid"
+            }
+        beforeEach(() => {
+            Trade.query=jasmine.createSpy("EventQuery");
+
+            usingIndexSpy = {
+                usingIndex:jasmine.createSpy("usingIndex")
+            }
+            loadAllSpy = {
+                loadAll: jasmine.createSpy("loadAll")
+            };
+            executionSpy = {
+                exec: jasmine.createSpy("exec"),
+            };
+            Trade.query.and.callFake(() => usingIndexSpy);
+            usingIndexSpy.usingIndex.and.callFake(() => loadAllSpy);
+            loadAllSpy.loadAll.and.callFake(() => executionSpy);
+            executionSpy.exec.and.callFake(callback => callback(errMsg,null));
+        });
+        it('should succeed and return getTradeByUser', (done) => {
+            service = new StockMarket();
+            service.getTradeByUser('u1').then((data) => {
+
+            }).catch(err=>{
+                expect(err).toEqual(errMsg);
+                expect(Trade.query).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
+
+    describe("***********Unit Tests for generateTrade passed successfully***********", () => {
+        let dummydata = {
+                "shares": "30",
+                "symbol": "s2",
+                "createdAt": "2018-04-03T13:07:21.010Z",
+                "price": "195.65",
+                "id": "4",
+                "type": "SELL",
+                "userid": "u1"
+            }
+        beforeEach(() => {
+            spyOn(Trade, 'create').and.callFake(function(event, callback) {
+                callback(null, dummydata)});
+        });
+        it('should succeed and return generateTrade', (done) => {
+            service = new StockMarket();
+            service.generateTrade(dummydata).then((data) => {
+                expect(data).toEqual(dummydata);
+                expect(Trade.create).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
+
+    describe("***********Unit Tests for generateTrade return error successfully***********", () => {
+        let errmsg = {
+            "code":500,
+            "status":"error",
+            "Message":"Error create Trade"
+            }
+        beforeEach(() => {
+            spyOn(Trade, 'create').and.callFake(function(event, callback) {
+                callback(errmsg, null)});
+        });
+        it('should succeed and return error generateTrade', (done) => {
+            service = new StockMarket();
+            service.generateTrade({id:"1",userid:"u1"}).then((data) => {
+
+            }).catch(err=>{
+                expect(err).toEqual(errmsg);
+                expect(Trade.create).toHaveBeenCalled();
+                done();
+            });
         });
     });
 });
