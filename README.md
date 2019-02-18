@@ -16,4 +16,7 @@ step 6: create db tables and populate it with sample data
          npm run seed
          
 step 7: to start Server
-         npm start
+         npm run start
+         
+step 8: To Run Test Cases
+         npm run test 
