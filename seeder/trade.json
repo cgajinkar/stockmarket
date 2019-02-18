@@ -1,0 +1,55 @@
+[{
+    "id": 1,
+    "type": "BUY",
+    "userid": "u1",
+    "symbol": "s1",
+    "shares": 10,
+    "price": 130.42,
+    "createdAt":"2018-04-03T13:07:21.010Z"
+},
+{
+    "id": 2,
+    "type": "SELL",
+    "userid": "u1",
+    "symbol": "s1",
+    "shares": 30,
+    "price": 195.65,
+    "createdAt":"2018-04-03T13:07:21.010Z"
+},
+{
+    "id": 3,
+    "type": "BUY",
+    "userid": "u1",
+    "symbol": "s2",
+    "shares": 10,
+    "price": 130.42,
+    "createdAt":"2018-04-03T13:07:21.010Z"
+},
+{
+    "id": 4,
+    "type": "SELL",
+    "userid": "u1",
+    "symbol": "s2",
+    "shares": 30,
+    "price": 195.65,
+    "createdAt":"2018-04-03T13:07:21.010Z"
+},
+{
+    "id": 5,
+    "type": "BUY",
+    "userid": "u1",
+    "symbol": "s3",
+    "shares": 10,
+    "price": 130.42,
+    "createdAt":"2018-04-03T13:07:21.010Z"
+},
+{
+    "id": 6,
+    "type": "SELL",
+    "userid": "u1",
+    "symbol": "s3",
+    "shares": 30,
+    "price": 195.65,
+    "createdAt":"2018-04-03T13:07:21.010Z"
+}
+]

@@ -1,0 +1,30 @@
+{
+  "name": "stocktrade",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "jasmine",
+    "seed": "node ./seeder/dbseeder.js",
+    "test-cover": "istanbul cover --include-all-sources spec/specs.js && istanbul check-coverage"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "dynogels": "^9.0.0",
+    "express": "^4.16.4",
+    "joi": "^14.3.1",
+    "lodash": "^4.17.11",
+    "rxjs": "^6.4.0"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "jasmine": "^3.3.1",
+    "jasmine-console-reporter": "^3.1.0",
+    "jasmine-node": "^1.16.2",
+    "jasmine-supertest": "^1.0.0",
+    "supertest": "^3.4.2"
+  }
+}

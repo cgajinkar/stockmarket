@@ -1,0 +1,129 @@
+[{
+    "timestamp":"2018-04-03T13:07:21.010Z",
+    "symbol":"s1",
+    "price":135,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-04T13:07:21.010Z",
+    "symbol":"s1",
+    "price":136,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-05T13:07:21.010Z",
+    "symbol":"s1",
+    "price":137,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-06T13:07:21.010Z",
+    "symbol":"s1",
+    "price":138,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-07T13:07:21.010Z",
+    "symbol":"s1",
+    "price":139,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-08T13:07:21.010Z",
+    "symbol":"s1",
+    "price":140,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-09T13:07:21.010Z",
+    "symbol":"s1",
+    "price":141,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-03T13:07:21.010Z",
+    "symbol":"s2",
+    "price":135,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-03T13:07:21.010Z",
+    "symbol":"s3",
+    "price":135,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-03T13:07:21.010Z",
+    "symbol":"s4",
+    "price":135,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-03T13:07:21.010Z",
+    "symbol":"s5",
+    "price":135,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-03T13:07:21.010Z",
+    "symbol":"s6",
+    "price":135,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-03T13:07:21.010Z",
+    "symbol":"s7",
+    "price":135,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-03T13:07:21.010Z",
+    "symbol":"s8",
+    "price":135,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-03T13:07:21.010Z",
+    "symbol":"s9",
+    "price":135,
+    "year":2018,
+    "month":4,
+    "day":3
+},
+{
+    "timestamp":"2018-04-03T13:07:21.010Z",
+    "symbol":"s10",
+    "price":135,
+    "year":2018,
+    "month":4,
+    "day":3
+}
+]
