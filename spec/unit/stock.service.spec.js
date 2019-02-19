@@ -501,4 +501,406 @@ describe("***********Unit Tests for Stock Service***********", () => {
             });
         });
     });
+
+    describe("***********Unit Tests for getallTrades passed successfully***********",()=>{
+        let dummydata = {
+            "Items": [{
+                attrs: {
+                    "shares": "30",
+                    "symbol": "s3",
+                    "createdAt": "2018-04-03T13:07:21.010Z",
+                    "price": "195.65",
+                    "id": "6",
+                    "type": "SELL",
+                    "userid": "u1"
+                }
+            },
+            {
+                attrs: {
+                    "shares": "30",
+                    "symbol": "s2",
+                    "createdAt": "2018-04-03T13:07:21.010Z",
+                    "price": "195.65",
+                    "id": "4",
+                    "type": "SELL",
+                    "userid": "u1"
+                }
+            }],
+            "Count": 2,
+            "ScannedCount": 2,
+            "ConsumedCapacity": null
+        }
+        service = new StockMarket();
+        beforeEach(()=>{
+            spyOn(service, 'scanTrade')
+            .and
+            .returnValue(Promise.resolve(dummydata));
+        });
+        it('should pass  and return result getallTrades',(done)=>{
+            let result = [ { shares: '30',
+            symbol: 's2',
+            createdAt: '2018-04-03T13:07:21.010Z',
+            price: '195.65',
+            id: '4',
+            type: 'SELL',
+            userid: 'u1' },
+          { shares: '30',
+            symbol: 's3',
+            createdAt: '2018-04-03T13:07:21.010Z',
+            price: '195.65',
+            id: '6',
+            type: 'SELL',
+            userid: 'u1' } ];
+
+            service.getallTrades().then(data=>{
+                expect(data).toEqual(result);
+                expect(service.scanTrade).toHaveBeenCalled();
+                done()
+            });
+        });
+    });
+
+    describe("***********Unit Tests for getallTrades failed successfully***********",()=>{
+        let errMsg = {
+            status:'error',
+            code:500,
+            message:'error getting All trade records'
+        }
+        service = new StockMarket();
+        beforeEach(()=>{
+            spyOn(service, 'scanTrade')
+            .and
+            .returnValue(Promise.reject(errMsg));
+        });
+        it('should fail  and return error getallTrades',(done)=>{
+            service.getallTrades().then(data=>{
+            }).catch(err=>{
+                expect(err).toEqual(errMsg);
+                expect(service.scanTrade).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
+
+    describe("***********Unit Tests for createTrade passed successfully***********",()=>{
+        let dummydata = {
+                    "shares": "30",
+                    "symbol": "s3",
+                    "createdAt": "2018-04-03T13:07:21.010Z",
+                    "price": "195.65",
+                    "id": "6",
+                    "type": "SELL",
+                    "userid": "u1"
+                }
+        let result = { data:
+            { shares: '30',
+              symbol: 's3',
+              createdAt: '2018-04-03T13:07:21.010Z',
+              price: '195.65',
+              id: '6',
+              type: 'SELL',
+              userid: 'u1' },
+           code: 201,
+           status: 'success' }
+        service = new StockMarket();
+        beforeEach(()=>{
+            spyOn(service, 'getTradeById')
+            .and
+            .returnValue(Promise.resolve(null));
+
+            spyOn(service, 'getUserById')
+            .and
+            .returnValue(Promise.resolve('u1'));
+
+            spyOn(service, 'generateTrade')
+            .and
+            .returnValue(Promise.resolve(dummydata));
+        });
+        it('should pass  and return result createTrade',(done)=>{
+            service.createTrade(dummydata).then(data=>{
+                expect(data).toEqual(result);
+                expect(service.getTradeById).toHaveBeenCalled();
+                expect(service.getUserById).toHaveBeenCalled();
+                expect(service.generateTrade).toHaveBeenCalled();
+                done()
+            });
+        });
+    });
+
+    describe("***********Unit Tests for createTrade (user dont exist)fail successfully***********",()=>{
+        let dummydata = {
+                    "shares": "30",
+                    "symbol": "s3",
+                    "createdAt": "2018-04-03T13:07:21.010Z",
+                    "price": "195.65",
+                    "id": "6",
+                    "type": "SELL",
+                    "userid": "u1"
+                }
+        let result = {
+            Type: "Error",
+            Message: 'Validation Error: User ID is not valid',
+            code: 422
+        }
+        service = new StockMarket();
+        beforeEach(()=>{
+            spyOn(service, 'getTradeById')
+            .and
+            .returnValue(Promise.resolve(null));
+
+            spyOn(service, 'getUserById')
+            .and
+            .returnValue(Promise.resolve(null));
+
+            spyOn(service, 'generateTrade')
+            .and
+            .returnValue(Promise.resolve(dummydata));
+        });
+        it('should  return message user dont exist createTrade',(done)=>{
+            service.createTrade(dummydata).then(data=>{
+                expect(data).toEqual(result);
+                expect(service.getTradeById).toHaveBeenCalled();
+                expect(service.getUserById).toHaveBeenCalled();
+                expect(service.generateTrade).not.toHaveBeenCalled();
+                done()
+            });
+        });
+    });
+
+    describe("***********Unit Tests for createTrade (duplicate Trade ID)fail successfully***********",()=>{
+        let dummydata = {
+                    "shares": "30",
+                    "symbol": "s3",
+                    "createdAt": "2018-04-03T13:07:21.010Z",
+                    "price": "195.65",
+                    "id": "6",
+                    "type": "SELL",
+                    "userid": "u1"
+                }
+        let result = {
+            Type: "Error",
+            Message: 'Duplicate Error : Trade ID already Exist.',
+            code: 400
+        }
+        service = new StockMarket();
+        beforeEach(()=>{
+            spyOn(service, 'getTradeById')
+            .and
+            .returnValue(Promise.resolve('data'));
+
+            spyOn(service, 'getUserById')
+            .and
+            .returnValue(Promise.resolve(null));
+
+            spyOn(service, 'generateTrade')
+            .and
+            .returnValue(Promise.resolve(dummydata));
+        });
+        it('should return message duplicate userID result createTrade',(done)=>{
+            service.createTrade(dummydata).then(data=>{
+                expect(data).toEqual(result);
+                expect(service.getTradeById).toHaveBeenCalled();
+                expect(service.getUserById).not.toHaveBeenCalled();
+                expect(service.generateTrade).not.toHaveBeenCalled();
+                done()
+            });
+        });
+    });
+
+    describe("***********Unit Tests for createTrade failed successfully***********",()=>{
+        let dummydata = {
+            "shares": "30",
+            "symbol": "s3",
+            "createdAt": "2018-04-03T13:07:21.010Z",
+            "price": "195.65",
+            "id": "6",
+            "type": "SELL",
+            "userid": "u1"
+        }
+
+        let errMsg = {
+            status:'error',
+            code:500,
+            message:'error getting All trade records'
+        }
+        service = new StockMarket();
+        beforeEach(()=>{
+            spyOn(service, 'getTradeById')
+            .and
+            .returnValue(Promise.resolve(null));
+
+            spyOn(service, 'getUserById')
+            .and
+            .returnValue(Promise.resolve('u1'));
+
+            spyOn(service, 'generateTrade')
+            .and
+            .returnValue(Promise.reject(errMsg));
+        });
+        it('should fail  and return error createTrade',(done)=>{
+            service.createTrade(dummydata).then(data=>{
+            }).catch(err=>{
+                expect(err).toEqual(errMsg);
+                expect(service.getUserById).toHaveBeenCalled();
+                expect(service.getTradeById).toHaveBeenCalled();
+                expect(service.generateTrade).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
+
+    describe("***********Unit Tests for getTradeReportByUser passed successfully***********",()=>{
+        let dummydata = {
+            "Items": [{
+                attrs: {
+                    "shares": "30",
+                    "symbol": "s3",
+                    "createdAt": "2018-04-03T13:07:21.010Z",
+                    "price": "195.65",
+                    "id": "6",
+                    "type": "SELL",
+                    "userid": "u1"
+                }
+            },
+            {
+                attrs: {
+                    "shares": "30",
+                    "symbol": "s2",
+                    "createdAt": "2018-04-03T13:07:21.010Z",
+                    "price": "195.65",
+                    "id": "4",
+                    "type": "SELL",
+                    "userid": "u1"
+                }
+            }],
+            "Count": 2,
+            "ScannedCount": 2,
+            "ConsumedCapacity": null
+        }
+
+        let result = { data:
+            [ { shares: '30',
+                symbol: 's2',
+                createdAt: '2018-04-03T13:07:21.010Z',
+                price: '195.65',
+                id: '4',
+                type: 'SELL',
+                userid: 'u1' },
+              { shares: '30',
+                symbol: 's3',
+                createdAt: '2018-04-03T13:07:21.010Z',
+                price: '195.65',
+                id: '6',
+                type: 'SELL',
+                userid: 'u1' } ],
+           code: 200,
+           status: 'success' }
+
+        service = new StockMarket();
+        beforeEach(()=>{
+            spyOn(service, 'getUserById')
+            .and
+            .returnValue(Promise.resolve('u1'));
+
+            spyOn(service, 'getTradeByUser')
+            .and
+            .returnValue(Promise.resolve(dummydata));
+        });
+        it('should pass and return result getTradeReportByUser',(done)=>{
+            service.getTradeReportByUser('u1').then(data=>{
+                expect(data).toEqual(result);
+                expect(service.getUserById).toHaveBeenCalled();
+                expect(service.getTradeByUser).toHaveBeenCalled();
+                done();
+            }).catch(err=>{
+
+            });
+        });
+    });
+
+    describe("***********Unit Tests for getTradeReportByUser(no user exist) return message successfully***********",()=>{
+        let dummydata = {
+            "Items": [{
+                attrs: {
+                    "shares": "30",
+                    "symbol": "s3",
+                    "createdAt": "2018-04-03T13:07:21.010Z",
+                    "price": "195.65",
+                    "id": "6",
+                    "type": "SELL",
+                    "userid": "u1"
+                }
+            },
+            {
+                attrs: {
+                    "shares": "30",
+                    "symbol": "s2",
+                    "createdAt": "2018-04-03T13:07:21.010Z",
+                    "price": "195.65",
+                    "id": "4",
+                    "type": "SELL",
+                    "userid": "u1"
+                }
+            }],
+            "Count": 2,
+            "ScannedCount": 2,
+            "ConsumedCapacity": null
+        }
+
+        let errMsg = {
+            Type: "Error",
+            Message: 'Validation Error: User ID does not Exist',
+            code: 404
+        }
+
+        service = new StockMarket();
+        beforeEach(()=>{
+            spyOn(service, 'getUserById')
+            .and
+            .returnValue(Promise.resolve(null));
+
+            spyOn(service, 'getTradeByUser')
+            .and
+            .returnValue(Promise.resolve(dummydata));
+        });
+        it('should pass and return result getTradeReportByUser',(done)=>{
+            service.getTradeReportByUser('u1').then(data=>{
+                expect(data).toEqual(errMsg);
+                expect(service.getUserById).toHaveBeenCalled();
+                expect(service.getTradeByUser).not.toHaveBeenCalled();
+                done();
+            }).catch(err=>{
+
+            });
+        });
+    });
+
+    describe("***********Unit Tests for getTradeReportByUser fail successfully***********",()=>{
+
+        let errMsg = {
+            Type: "Error",
+            Message: 'Error fetching reports by User',
+            code: 404
+        }
+
+        service = new StockMarket();
+        beforeEach(()=>{
+            spyOn(service, 'getUserById')
+            .and
+            .returnValue(Promise.resolve('u1'));
+
+            spyOn(service, 'getTradeByUser')
+            .and
+            .returnValue(Promise.reject(errMsg));
+        });
+        it('should pass and return result getTradeReportByUser',(done)=>{
+            service.getTradeReportByUser('u1').then(data=>{
+            }).catch(err=>{
+                expect(err).toEqual(errMsg);
+                expect(service.getUserById).toHaveBeenCalled();
+                expect(service.getTradeByUser).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
 });
