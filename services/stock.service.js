@@ -89,6 +89,8 @@ class StockMarket {
                         data_v1.push(element.attrs);
                     });
                     return { data: _.sortBy(data_v1, 'id'), code: 200, status: "success" };
+                }else{
+                    return {Message: 'User has not conducted any trades',code : 200, status: 'success'}
                 }
             }
         } catch (error) {
