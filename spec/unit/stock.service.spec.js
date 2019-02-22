@@ -903,4 +903,39 @@ describe("***********Unit Tests for Stock Service***********", () => {
             });
         });
     });
+    describe("***********Unit Tests for getTradeReportByUser (no trades user ID)passed successfully***********",()=>{
+        let dummydata = {
+            "Items": [],
+            "Count": 0,
+            "ScannedCount": 2,
+            "ConsumedCapacity": null
+        }
+
+        let result = {
+            Message: 'User has not conducted any trades',
+            code: 200,
+            status: 'success'
+        }
+
+        service = new StockMarket();
+        beforeEach(()=>{
+            spyOn(service, 'getUserById')
+            .and
+            .returnValue(Promise.resolve('u1'));
+
+            spyOn(service, 'getTradeByUser')
+            .and
+            .returnValue(Promise.resolve(dummydata));
+        });
+        it('should pass and return result getTradeReportByUser',(done)=>{
+            service.getTradeReportByUser('u1').then(data=>{
+                expect(data).toEqual(result);
+                expect(service.getUserById).toHaveBeenCalled();
+                expect(service.getTradeByUser).toHaveBeenCalled();
+                done();
+            }).catch(err=>{
+
+            });
+        });
+    });
 });
